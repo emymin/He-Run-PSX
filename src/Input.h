@@ -21,22 +21,24 @@
 u_char padbuff[2][34];
 
 typedef struct _controller{
-    u_char type;
+    unsigned char status;
+    unsigned char len:4;
+    unsigned char type:4;
+    unsigned short button;
+    unsigned char rightstick_x,rightstick_y;
+    unsigned char leftstick_x,leftstick_y;
 } Controller;
 
 Controller controller1;
 
 void initControllers(){
     InitPAD( padbuff[0], 34, padbuff[1], 34 );
+
     padbuff[0][0] = padbuff[0][1] = 0xff;
     padbuff[1][0] = padbuff[1][1] = 0xff;
+
     StartPAD();
 
-    if( padbuff[0][0] == 0 )
-    {
-        controller1.type = padbuff[0][1]>>4;
-
-    }
 
 }
 

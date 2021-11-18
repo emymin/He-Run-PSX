@@ -17,6 +17,8 @@ extern int he_texture[];
 Texture he_texture_text;
 Sprite he_sprite;
 
+Controller* controller;
+
 
 int main() {
         
@@ -25,20 +27,36 @@ int main() {
     
     GetTexture(&he_texture_text,he_texture);
     he_sprite.text = &he_texture_text;
+    he_sprite.x=64;
+    he_sprite.y=64;
 
 
     while(1) {
+        controller = (Controller*)padbuff[0];
+
+        if(controller->status==0){
+            if((controller->type==0x4)||(controller->type==0x5)||(controller->type==0x7)){
+                if(!(controller->button&PAD_UP)){
+                    he_sprite.y--;
+                }
+                else if(!(controller->button&PAD_DOWN)){
+                    he_sprite.y++;
+                }
+                if(!(controller->button&PAD_LEFT)){
+                    he_sprite.x--;
+                }
+                else if(!(controller->button&PAD_RIGHT)){
+                    he_sprite.x++;
+                }
+            }
+        }
+
         ClearOTagR(ord.ot[db], OTLEN);
 
         time++;
 
-        he_sprite.y = (120-32) + sin((float)time*0.1f)*(120-32);
-        he_sprite.x = (160-32) + cos((float)time*0.1f)*(160-32);
         DrawSprite(&he_sprite,&ord,db);
 
-        he_sprite.y = (120-32) + cos((float)time*0.1f)*(120-32);
-        he_sprite.x = (160-32) + sin((float)time*0.1f)*(120-32);
-        DrawSprite(&he_sprite,&ord,db);
     
 
 
