@@ -92,7 +92,7 @@ void DrawAlignedSprite(Sprite* sprite,OrderingTable* ord,int db){
 
     tpage = (DR_TPAGE*)(ord->nextpri);
     setDrawTPage(tpage,0,1,sprite->text->tpage);
-    addPrim(ord->ot,tpage);
+    addPrim(ord->ot[db],tpage);
 
     ord->nextpri += sizeof(DR_TPAGE);
 
