@@ -1,6 +1,7 @@
 [TIM Files]
 File_0=C:\dev\psxdev\source\textures\he.TIM
 File_1=C:\dev\psxdev\source\textures\he_transparent.TIM
+File_2=C:\dev\psxdev\source\textures\road_left.TIM
 [Graphics Mode]
 Width=320
 Height=256

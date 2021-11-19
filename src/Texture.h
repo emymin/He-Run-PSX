@@ -39,6 +39,15 @@ void LoadTexture(u_long *tim, TIM_IMAGE *tparam) {
 
 }
 
+void CreateSprite(Sprite* sprite,int x,int y,int angle,int scale,Texture* text){
+    sprite->x=x;
+    sprite->y=y;
+    sprite->angle=angle;
+    sprite->scale=scale;
+    sprite->text=text;
+
+}
+
 GetTexture(Texture* text,int tim_image[]){
     TIM_IMAGE tim;
     LoadTexture((u_long*)tim_image,&tim);
