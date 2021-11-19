@@ -12,9 +12,6 @@ typedef struct _ordering_table{
     char *nextpri;
 } OrderingTable;
 
-void IncreaseOrderingTablePointer(OrderingTable* ord){
-    *(ord->nextpri) += sizeof(TILE);
-}
 
 DISPENV disp[2];
 DRAWENV draw[2];
