@@ -13,19 +13,11 @@
 int time;
 
 
-extern int he_texture[];
+extern int he_transparent_texture[];
 Texture he_texture_text;
 Sprite he_sprite;
 
-Triangle triangle;
-
 Controller* controller;
-
-SVECTOR vertices[] = {
-{   0, -20,  0  },
-{  10,  20,  0  },
-{ -10,  20,  0  }
-};
 
 
 int main() {
@@ -33,16 +25,13 @@ int main() {
     initGraphics();
     initControllers();
     
-    GetTexture(&he_texture_text,he_texture);
+    GetTexture(&he_texture_text,he_transparent_texture);
     he_sprite.text = &he_texture_text;
     he_sprite.x=64;
     he_sprite.y=64;
     he_sprite.angle=2048;
     he_sprite.scale=1;
 
-    triangle = CreateTriangle(vertices,255,255,255);
-    triangle.posx=ONE*64;
-    triangle.posy=ONE*64;
 
     while(1) {
         controller = (Controller*)padbuff[0];
@@ -66,19 +55,17 @@ int main() {
 
         ClearOTagR(ord.ot[db], OTLEN);
 
-        triangle.angle=time*20;
         he_sprite.angle=time*20;
 
         time++;
 
-        DrawTriangle(&triangle,&ord,db);
         DrawSprite(&he_sprite,&ord,db);
 
 
     
 
 
-        FntPrint("Time: %d\nTriangle position:\n    X: %d\n    Y: %d\nAngle: %d",time,triangle.posx>>12,triangle.posy>>12,triangle.angle);
+        FntPrint("Time: %d\nHe position:\n    X: %d\n    Y: %d\nAngle: %d",time,he_sprite.x,he_sprite.y,he_sprite.angle);
 
         FntFlush(-1);
                 
