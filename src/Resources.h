@@ -27,6 +27,13 @@ Texture car1_texture_text;
 extern int title_texture[];
 Texture title_texture_text;
 
+extern int gameover_texture[];
+Texture gameover_texture_text;
+
+extern int neko_texture[];
+Texture neko_texture_text;
+
+
 int RAN;
 int Random(int max)
 {

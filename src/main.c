@@ -22,6 +22,9 @@ Sprite top_road_right;
 Sprite car;
 
 Sprite title_sprite;
+Sprite gameover_sprite;
+
+Sprite neko_sprite;
 
 Controller* controller;
 
@@ -38,6 +41,8 @@ void initResources(){
     GetTexture(&road_right,road_right_texture);
     GetTexture(&car1_texture_text,car1_texture);
     GetTexture(&title_texture_text,title_texture);
+    GetTexture(&neko_texture_text,neko_texture);
+    GetTexture(&gameover_texture_text,gameover_texture);
 
     sideRectangle = CreateRectangle(0,0,128,240,200,200,200);
 
@@ -63,11 +68,17 @@ void initResources(){
     title_sprite.text=&title_texture_text;
     title_sprite.x=320/2;
     title_sprite.y=96;
+
+    gameover_sprite.text = &gameover_texture_text;
+    gameover_sprite.x=320/2;
+    gameover_sprite.y=96;
+    gameover_sprite.angle=2048;
+
+    neko_sprite.text=&neko_texture_text;
+    neko_sprite.x=320/2;
+    neko_sprite.y=240/2;
+    neko_sprite.angle=2048;
     
-
-
-
-
 
 }
 
@@ -185,10 +196,17 @@ void gameLoop(){
 }
 
 void gameOverLoop(){
+    time=0;
     while(1){
         ClearOTagR(ord.ot[db], OTLEN);
-        FntPrint("\n\n\n\n\n\n\n\n                 GAME OVER");
-        FntPrint("\n\n\n\n\n\n\n\n            Press Start to retry");
+
+        time++;
+        gameover_sprite.scale= -512*sin((float)time*0.05);
+        
+        DrawSprite(&gameover_sprite,&ord,db);
+
+        FntPrint("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+        FntPrint("          Press Start to retry");
         FntFlush(-1);
         display();
 
@@ -199,6 +217,9 @@ void gameOverLoop(){
                 }
             }
         }
+
+
+
     }
 }
 
@@ -206,8 +227,9 @@ void mainMenuLoop(){
     while(1){
         ClearOTagR(ord.ot[db], OTLEN);
 
-        time+=64;
-        title_sprite.angle = 2048+256*sin(time*0.0005);
+        time++;
+        title_sprite.angle = 2048+256*sin(((float)time)*0.05);
+        title_sprite.scale = -512*sin((float)time*0.1);
 
         DrawSprite(&title_sprite,&ord,db);
 
@@ -221,12 +243,48 @@ void mainMenuLoop(){
                 if(!(controller->button&PAD_START)){
                     return;
                 }
+                if(!(controller->button&PAD_L1)){
+                    if(!(controller->button&PAD_R1)){
+                        if(!(controller->button&PAD_TRIANGLE)){
+                            nekoLoop();
+                        }
+                    }
+                }
             }
         }
     }
 
 }
 
+void nekoLoop(){
+    neko_sprite.angle=2048;
+    while(1){
+
+        ClearOTagR(ord.ot[db], OTLEN);
+
+
+        if(controller->status==0){
+            if((controller->type==0x4)||(controller->type==0x5)||(controller->type==0x7)){
+                if(!(controller->button&PAD_LEFT)){
+                    neko_sprite.angle-=5;
+                }
+                else if(!(controller->button&PAD_RIGHT)){
+                    neko_sprite.angle+=5;
+                }
+                if(!(controller->button&PAD_SELECT)){
+                    return;
+                    
+                }
+            }
+        }
+
+        DrawSprite(&neko_sprite,&ord,db);
+
+        display();
+
+
+    }
+}
 
 int main() {
 
