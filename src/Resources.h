@@ -24,8 +24,8 @@ Texture road_right;
 extern int car1_texture[];
 Texture car1_texture_text;
 
-
-Controller* controller;
+extern int title_texture[];
+Texture title_texture_text;
 
 int RAN;
 int Random(int max)

@@ -21,6 +21,11 @@ Sprite top_road_right;
 
 Sprite car;
 
+Sprite title_sprite;
+
+Controller* controller;
+
+
 
 void initResources(){
     initGraphics();
@@ -32,6 +37,7 @@ void initResources(){
     GetTexture(&road_left,road_left_texture);
     GetTexture(&road_right,road_right_texture);
     GetTexture(&car1_texture_text,car1_texture);
+    GetTexture(&title_texture_text,title_texture);
 
     sideRectangle = CreateRectangle(0,0,128,240,200,200,200);
 
@@ -54,8 +60,11 @@ void initResources(){
     top_road_right.x=128+(192/2);
     top_road_right.y=-240;
 
-    he_sprite.text->w-=13;
-    he_sprite.text->h-=13;
+    title_sprite.text=&title_texture_text;
+    title_sprite.x=320/2;
+    title_sprite.y=96;
+    
+
 
 
 
@@ -81,15 +90,16 @@ void resetGame(){
     lives=9;
     score=0;
     hasCollided = 0;
+    time=0;
 
 }
 
 
 int checkCollision(Sprite* he,Sprite* sprite2){
-    if(he->x < sprite2->x + sprite2->text->w &&
-    he->x + he->text->w > sprite2->x &&
-    he->y < sprite2->y +sprite2->text->h &&
-    he->y + he->text->h > sprite2->y){
+    if(he->x - (he->text->w-32)/2 < sprite2->x + sprite2->text->w &&
+    he->x> sprite2->x &&
+    he->y - (he->text->h-44)/2 < sprite2->y +sprite2->text->h &&
+    he->y > sprite2->y){
         return 1;
     }
     return 0;
@@ -129,7 +139,7 @@ void gameLoop(){
             top_road_right.y=-240;
         }
 
-        car.y+= 5 + (score>>10);
+        car.y+= 5 + (score>>11);
         if(car.y>=240){
             car.y=-128;
             Random(192-64);
@@ -195,8 +205,14 @@ void gameOverLoop(){
 void mainMenuLoop(){
     while(1){
         ClearOTagR(ord.ot[db], OTLEN);
-        FntPrint("\n\n\n\n\n\n\n\n                 HE RUN");
-        FntPrint("\n\n\n\n\n\n\n\n              Press Start");
+
+        time+=64;
+        title_sprite.angle = 2048+256*sin(time*0.0005);
+
+        DrawSprite(&title_sprite,&ord,db);
+
+        FntPrint("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+        FntPrint("              Press Start");
         FntFlush(-1);
         display();
 
@@ -215,6 +231,8 @@ void mainMenuLoop(){
 int main() {
 
     initResources();
+
+    //VSync(170); //wait for boot screen
 
     mainMenuLoop();
 
