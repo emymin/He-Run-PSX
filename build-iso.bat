@@ -1,1 +1,1 @@
-..\mkpsxiso\mkpsxiso.exe config.xml
+..\mkpsxiso\mkpsxiso.exe -y config.xml

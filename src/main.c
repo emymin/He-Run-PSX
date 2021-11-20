@@ -25,6 +25,8 @@ Sprite car;
 void initResources(){
     initGraphics();
     initControllers();
+    controller = (Controller*)padbuff[0];
+
     
     GetTexture(&he_texture_text,he_transparent_texture);
     GetTexture(&road_left,road_left_texture);
@@ -56,10 +58,14 @@ void initResources(){
     he_sprite.text->h-=13;
 
 
+
+
 }
 
 int lives;
 int score;
+int hasCollided;
+
 
 void resetGame(){
     he_sprite.x=128+(320-128)/2;
@@ -74,14 +80,16 @@ void resetGame(){
 
     lives=9;
     score=0;
+    hasCollided = 0;
+
 }
 
 
-int checkCollision(Sprite* sprite1,Sprite* sprite2){
-    if(sprite1->x < sprite2->x + sprite2->text->w &&
-    sprite1->x + sprite1->text->w > sprite2->x &&
-    sprite1->y < sprite2->y +sprite2->text->h &&
-    sprite1->y + sprite1->text->h > sprite2->y){
+int checkCollision(Sprite* he,Sprite* sprite2){
+    if(he->x < sprite2->x + sprite2->text->w &&
+    he->x + he->text->w > sprite2->x &&
+    he->y < sprite2->y +sprite2->text->h &&
+    he->y + he->text->h > sprite2->y){
         return 1;
     }
     return 0;
@@ -90,12 +98,7 @@ int checkCollision(Sprite* sprite1,Sprite* sprite2){
 
 
 void gameLoop(){
-    int hasCollided;
-
-    hasCollided = 0;
-
     while(1) {
-        controller = (Controller*)padbuff[0];
 
         if(controller->status==0){
             if((controller->type==0x4)||(controller->type==0x5)||(controller->type==0x7)){
@@ -108,9 +111,6 @@ void gameLoop(){
                     if(he_sprite.x<(320-32)){
                         he_sprite.x+=3;
                     }
-                }
-                if(!(controller->button&PAD_START)){
-                    resetGame();
                 }
             }
         }
@@ -129,7 +129,7 @@ void gameLoop(){
             top_road_right.y=-240;
         }
 
-        car.y+=5;
+        car.y+= 5 + (score>>10);
         if(car.y>=240){
             car.y=-128;
             Random(192-64);
@@ -174,14 +174,54 @@ void gameLoop(){
     }   
 }
 
+void gameOverLoop(){
+    while(1){
+        ClearOTagR(ord.ot[db], OTLEN);
+        FntPrint("\n\n\n\n\n\n\n\n                 GAME OVER");
+        FntPrint("\n\n\n\n\n\n\n\n            Press Start to retry");
+        FntFlush(-1);
+        display();
+
+        if(controller->status==0){
+            if((controller->type==0x4)||(controller->type==0x5)||(controller->type==0x7)){
+                if(!(controller->button&PAD_START)){
+                    return;
+                }
+            }
+        }
+    }
+}
+
+void mainMenuLoop(){
+    while(1){
+        ClearOTagR(ord.ot[db], OTLEN);
+        FntPrint("\n\n\n\n\n\n\n\n                 HE RUN");
+        FntPrint("\n\n\n\n\n\n\n\n              Press Start");
+        FntFlush(-1);
+        display();
+
+        if(controller->status==0){
+            if((controller->type==0x4)||(controller->type==0x5)||(controller->type==0x7)){
+                if(!(controller->button&PAD_START)){
+                    return;
+                }
+            }
+        }
+    }
+
+}
+
 
 int main() {
 
     initResources();
 
+    mainMenuLoop();
+
     while(1){
         resetGame();
         gameLoop();
+        gameOverLoop();
     }
 
     
