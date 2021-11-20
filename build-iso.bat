@@ -1,0 +1,1 @@
+..\mkpsxiso\mkpsxiso.exe config.xml

@@ -37,6 +37,14 @@ void display() {
     
 }
 
+void clearVRAM()
+{
+     RECT rectTL;
+     setRECT(&rectTL, 0, 0, 1024, 512);
+     ClearImage2(&rectTL, 0, 0, 0);
+     DrawSync(0);
+}
+
 void initGraphics(){
     ResetGraph(0);
 
@@ -46,6 +54,8 @@ void initGraphics(){
     SetDefDispEnv(&disp[1], 0, 240, 320, 240);
     SetDefDrawEnv(&draw[1], 0, 0, 320, 240);
 
+    clearVRAM();
+    
     FntLoad(960, 0);
     FntOpen(0, 8, 320, 224, 0, 100);
 
@@ -58,6 +68,7 @@ void initGraphics(){
 
 
     PutDrawEnv(&draw[!db]);
+
 
 
 }
