@@ -33,6 +33,8 @@ Texture gameover_texture_text;
 extern int neko_texture[];
 Texture neko_texture_text;
 
+#include "resources/hit.h"
+#include "resources/start.h"
 
 int RAN;
 int Random(int max)

@@ -1,14 +1,9 @@
-#include <sys/types.h>
-#include <stdio.h>
-#include <libetc.h>
-#include <libgte.h>
-#include <libgpu.h>
-
 #include "Graphics.h"
 #include "Primitives.h"
 #include "Texture.h"
 #include "Input.h"
 #include "Resources.h"
+#include "Audio.h"
 
 
 Rectangle sideRectangle;
@@ -33,6 +28,7 @@ Controller* controller;
 void initResources(){
     initGraphics();
     initControllers();
+
     controller = (Controller*)padbuff[0];
 
     
@@ -103,6 +99,7 @@ void resetGame(){
     hasCollided = 0;
     time=0;
 
+
 }
 
 
@@ -161,6 +158,7 @@ void gameLoop(){
             if(!hasCollided){
                 hasCollided = 1;
                 lives--;
+                audioPlay(SPU_01CH);
                 if(lives<=0){return;}
             }
         }else{
@@ -213,7 +211,17 @@ void gameOverLoop(){
         if(controller->status==0){
             if((controller->type==0x4)||(controller->type==0x5)||(controller->type==0x7)){
                 if(!(controller->button&PAD_START)){
+                    audioPlay(SPU_2CH);
                     return;
+                }
+                if(!(controller->button&PAD_L1)){
+                    if(!(controller->button&PAD_R1)){
+                        if(!(controller->button&PAD_TRIANGLE)){
+                            audioPlay(SPU_2CH);
+                            nekoLoop();
+
+                        }
+                    }
                 }
             }
         }
@@ -241,12 +249,15 @@ void mainMenuLoop(){
         if(controller->status==0){
             if((controller->type==0x4)||(controller->type==0x5)||(controller->type==0x7)){
                 if(!(controller->button&PAD_START)){
+                    audioPlay(SPU_2CH);
                     return;
                 }
                 if(!(controller->button&PAD_L1)){
                     if(!(controller->button&PAD_R1)){
                         if(!(controller->button&PAD_TRIANGLE)){
+                            audioPlay(SPU_2CH);
                             nekoLoop();
+
                         }
                     }
                 }
@@ -272,6 +283,7 @@ void nekoLoop(){
                     neko_sprite.angle+=5;
                 }
                 if(!(controller->button&PAD_SELECT)){
+                    audioPlay(SPU_2CH);
                     return;
                     
                 }
@@ -290,7 +302,11 @@ int main() {
 
     initResources();
 
-    //VSync(170); //wait for boot screen
+    VSync(180); //wait for boot screen
+
+    initAudio();
+    audioTransferVagToSPU(&hit_sound,hit_sound_size,SPU_01CH);
+    audioTransferVagToSPU(&start_sound,start_sound_size,SPU_02CH);
 
     mainMenuLoop();
 
