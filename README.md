@@ -9,4 +9,4 @@ A small game I made to try out PSX homebrew development
 
 Run compile_and_run.bat to build the project and run with the emulator
 
-Can be played online [here](https://emymin.github.io/projects/herun/)
+Can be played online [here](https://emymin.net/creations/psx/)
